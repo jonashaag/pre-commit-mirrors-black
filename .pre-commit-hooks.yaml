@@ -1,0 +1,7 @@
+- id: black-conda
+  name: black-conda
+  description: "Black: The uncompromising Python code formatter"
+  entry: black
+  language: conda
+  require_serial: true
+  types: [python]
