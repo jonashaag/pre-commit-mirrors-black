@@ -1,0 +1,16 @@
+name: Create and push tag
+on:
+  push:
+    branches:
+      - master
+jobs:
+  tagthis:
+    name: Create and push tag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.1.0
+      - name: Create and push tag
+        run: |
+          tag=$(git show-branch --no-name HEAD | grep -Po "(?<=tagthis=)(.+)" || exit 0)
+          echo Found tag $tag
