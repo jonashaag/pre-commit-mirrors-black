@@ -12,5 +12,5 @@ jobs:
         uses: actions/checkout@v2.1.0
       - name: Create and push tag
         run: |
-          tag=$(git show-branch --no-name HEAD | grep -Po "(?<=tagthis=)(.+)" || exit 0)
+          tag="$(git show-branch --no-name HEAD | grep -Po "^(?<=tagthis=)(.+)")"
           echo Found tag $tag
