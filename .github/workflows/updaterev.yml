@@ -13,7 +13,7 @@ jobs:
         with:
           script: |
             const updaterev = require(`${process.env.GITHUB_WORKSPACE}/.github/workflows/updaterev.js`)
-            updaterev({ pkg, latestVersion } => {
+            updaterev(({ pkg, latestVersion }) => {
               core.setOutput("packageName", pkg)
               core.setOutput("newVersion", newVersion)
             })
