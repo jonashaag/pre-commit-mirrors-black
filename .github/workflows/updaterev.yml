@@ -1,5 +1,5 @@
 name: Update rev
-#on: push
+on: push
 jobs:
   updaterev:
     name: Update rev
@@ -22,7 +22,7 @@ jobs:
         # This is the v3.10.0 tag but for security purposes we pin to the exact commit.
         uses: peter-evans/create-pull-request@9825ae65b1cb54b543b938503728b432a0176d29
         with:
-          commit-message: "Update ${{ steps.updaterev.outputs.packageName }} to ${{ steps.updaterev.outputs.newVersion }}"
+          commit-message: "Update ${{ steps.updaterev.outputs.packageName }} to ${{ steps.updaterev.outputs.newVersion }}\n\n[tagthis: ${{ steps.updaterev.outputs.newVersion }}]"
           title: "Update ${{ steps.updaterev.outputs.packageName }} to ${{ steps.updaterev.outputs.newVersion }}"
           body: |
             This PR was created by the updaterev workflow as it detected that
