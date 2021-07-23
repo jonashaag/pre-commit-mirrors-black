@@ -11,8 +11,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Create and push tag
+        shell: bash -eux
         run: |
-          tag="$(git log -1 --pretty=%B | grep -Po "(?<=tagthis=)(.+)")"
-          echo Found tag $tag
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+          tag="$(git log -1 --pretty=%B | grep -Po "(?<=tagthis=)(.+)" || true)"
+          if ! [ -z "$tag" ]; then
+            git tag "$tag" HEAD
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+            git push --tags
+          fi
