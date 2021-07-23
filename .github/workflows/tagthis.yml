@@ -11,7 +11,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Create and push tag
-        shell: bash -eux
+        shell: bash -eux {0}
         run: |
           tag="$(git log -1 --pretty=%B | grep -Po "(?<=tagthis=)(.+)" || true)"
           if ! [ -z "$tag" ]; then
