@@ -7,6 +7,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2.1.0
+      - run: npm install js-yaml
       - name: Run Actions script
         uses: actions/github-script@v3
         with:
