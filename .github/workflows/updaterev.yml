@@ -1,5 +1,5 @@
 name: Update rev
-on: push
+#on: push
 jobs:
   updaterev:
     name: Update rev
