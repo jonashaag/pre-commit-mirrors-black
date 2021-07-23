@@ -25,8 +25,6 @@ jobs:
           commit-message: "Update ${{ steps.updaterev.outputs.packageName }} to ${{ steps.updaterev.outputs.newVersion }}\n\n[tagthis: ${{ steps.updaterev.outputs.newVersion }}]"
           title: "Update ${{ steps.updaterev.outputs.packageName }} to ${{ steps.updaterev.outputs.newVersion }}"
           body: |
-            This PR was created by the updaterev workflow as it detected that \
-            a new version of ${{ steps.updaterev.outputs.packageName }} was released \
-            to conda-forge.
+            This PR was created by the updaterev workflow as it detected that a new version of ${{ steps.updaterev.outputs.packageName }} was released to conda-forge.
           branch: updaterev
           delete-branch: true
