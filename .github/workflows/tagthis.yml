@@ -12,9 +12,22 @@ jobs:
         uses: actions/checkout@v2
       - name: Create and push tag
         run: |
-          set -eux
-          tag="$(git log -1 --pretty=%B | grep -Po "(?<=\[tagthis: )(.+)\]" || true)"
-          if ! [ -z "$tag" ]; then
+          set -ux
+          set +e
+          parents=($(git show --no-patch --format="%P" HEAD))
+          if [ ${#parents[@]} -eq 2 ]; then
+            # We have a GitHub --no-ff merge commit, actual commit is expected
+            # to be the second parent.
+            commit=${parents[1]}
+          else
+            commit=HEAD
+          fi
+          tag="$(git log -1 --pretty=%B $commit | grep -Po "(?<=\[tagthis: )(.+)\]")"
+          set -e
+          if [ -z "$tag" ]; then
+            echo "Nothing to do, did not find [tagthis: ...] in commit message."
+          else
+            echo "Found [tagthis: $tag] in commit message, creating tag."
             git tag "$tag" HEAD
             git config user.name github-actions
             git config user.email github-actions@github.com
