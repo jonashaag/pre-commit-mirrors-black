@@ -24,7 +24,7 @@ jobs:
           else
             commit=HEAD
           fi
-          tag="$(git log -1 --pretty=%B $commit | grep -Po "(?<=\[tagthis: )(.+)\]")"
+          tag="$(git log -1 --pretty=%B $commit | grep -Po "(?<=\[tagthis: )(.+)(?<=\])")"
           set -e
           if [ -z "$tag" ]; then
             echo "Nothing to do, did not find [tagthis: ...] in commit message."
