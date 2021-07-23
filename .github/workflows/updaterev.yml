@@ -7,16 +7,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2.1.0
-      - name: Setup node
-        uses: actions/setup-node@v2
-        with:
-          node-version: 14
-      - name: Install dependencies
-        run: npm ci
       - name: Run Actions script
         uses: actions/github-script@v3
+        id: updaterev
         with:
           script: |
-            const yaml = require("js-yaml")
-            //const script = require(`${process.env.GITHUB_WORKSPACE}/.github/workflows/conda_release.js`)
-            //console.log(script({github, context}))
+            const updaterev = require(`${process.env.GITHUB_WORKSPACE}/.github/workflows/updaterev.js`)
+            updaterev({ pkg, latestVersion } => {
+              core.setOutput("packageName", pkg)
+              core.setOutput("newVersion", newVersion)
+            })
+      - name: Create Pull Request
+        id: cpr
+        # This is the v3.10.0 tag but for security purposes we pin to the exact commit.
+        uses: peter-evans/create-pull-request@9825ae65b1cb54b543b938503728b432a0176d29
+        with:
+          commit-message: "Update ${{ steps.updaterev.outputs.packageName }} to ${{ steps.updaterev.outputs.newVersion }}"
+          title: "Update ${{ steps.updatrev.outputs.packageName }} to ${{ steps.updaterev.outputs.newVersion }}"
+          body: |
+            This PR was created by the updaterev workflow as it detected that
+            a new version of ${{ steps.updaterev.outputs.packageName }} was released
+            to conda-forge.
+          branch: updaterev
+          delete-branch: true
