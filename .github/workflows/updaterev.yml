@@ -1,8 +1,9 @@
 name: Update Conda dependencies
-on:
-  schedule:
-    # Once a day
-    - cron: "43 21 * * *"
+# on:
+#   schedule:
+#     # Once a day
+#     - cron: "43 21 * * *"
+on: push
 jobs:
   updaterev:
     name: Update Conda dependencies
