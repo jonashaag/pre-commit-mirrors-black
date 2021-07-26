@@ -1,33 +1,32 @@
-name: Update rev
+name: Update Conda dependencies
 on:
   schedule:
     # Once a day
     - cron: "43 21 * * *"
 jobs:
   updaterev:
-    name: Update rev
+    name: Update Conda dependencies
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Run Actions script
-        uses: actions/github-script@v3
-        id: updaterev
+      - name: Checkout github-actions repo
+        uses: actions/checkout@v2
         with:
-          script: |
-            const updaterev = require(`${process.env.GITHUB_WORKSPACE}/.github/workflows/updaterev.js`)
-            updaterev(({ pkg, newVersion }) => {
-              core.setOutput("packageName", pkg)
-              core.setOutput("newVersion", newVersion)
-            })
+          repository: Quantco/github-actions
+          ref: update-conda-dependencies
+          token: ${{ secrets.FQ_GH_TOKEN }}
+          path: .github/quantco-actions
+      - name: Update Conda dependencies
+        uses: ./.github/quantco-actions/update-conda-dependencies
       - name: Create Pull Request
         id: cpr
         # This is the v3.10.0 tag but for security purposes we pin to the exact commit.
         uses: peter-evans/create-pull-request@9825ae65b1cb54b543b938503728b432a0176d29
         with:
-          commit-message: "Update ${{ steps.updaterev.outputs.packageName }} to ${{ steps.updaterev.outputs.newVersion }}\n\n[tagthis: ${{ steps.updaterev.outputs.newVersion }}]"
-          title: "Update ${{ steps.updaterev.outputs.packageName }} to ${{ steps.updaterev.outputs.newVersion }}"
+          commit-message: "Update ${{ steps.update_conda_dependencies.outputs.updates }}"
+          title: "Update ${{ steps.update_conda_dependencies.outputs.updates }}"
           body: |
-            This PR was created by the updaterev workflow as it detected that a new version of ${{ steps.updaterev.outputs.packageName }} was released to conda-forge.
-          branch: updaterev
+            This PR was created by the update-conda-dependencies workflow as it detected new versions of some of the dependencies were released to conda-forge.
+          branch: update-conda-dependencies
           delete-branch: true
